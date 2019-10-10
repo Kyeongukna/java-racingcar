@@ -1,63 +1,71 @@
 package Study_hw_1;
 
-import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CarManager {
-    private Car user[];
-    private String username;
+    private List<Car> users = new ArrayList<>();
+    private String userName;
+    private int countUser;
     private int serveral; // 게임 횟수
 
-    CarManager(String username){
-        this.username=username;
-    }
-
-    public void setServeral(int serveral) {
+    public CarManager(String username, int serveral){
+        this.userName = username;
         this.serveral = serveral;
     }
 
-    private int countuser(){
-        int count=1;
-        for(int i=0; i<username.length();i++)
-        if(username.charAt(i)==',') count ++;
-        return count;
-    }
     // 유저가 몇명인지 카운트 해주는 메소드
-
-    private void setUser(){
-       user=new Car[countuser()];
-        for(int i=0;i<countuser();i++)
-            user[i]=new Car(username.split(",")[i]);
+    private void countUser() {
+        int count = 1;
+        for(int i = 0; i < userName.length(); i++) {
+            if (userName.charAt(i) == ',') count++;
+        }
+        this.countUser = count;
     }
 
-    public void play(){
+    //유저들의 이름을 받아서 유저를 나눠 Car객체를 초기화
+    private void setUser() {
+        String[] names = userName.split(",");
+        for (int i = 0; i < countUser; i++) {
+            users.add(new Car(names[i]));
+        }
+    }
+
+    private void doRaceOneTime(){
+        for(int i = 0; i < countUser; i++){
+            users.get(i).go();
+            System.out.print("\n" + users.get(i).getName() + " : ");
+            users.get(i).print();
+        }
+        System.out.println();
+    }
+
+    public void race() {
+        countUser();
         setUser();
         System.out.println("실행 결과");
-        for(int i=0;i<serveral;i++){
-            for(int j=0;j<countuser();j++){
-                user[j].go();
-                System.out.print("\n"+user[j].getName()+" : ");
-                user[j].print();
-            }
-            System.out.println();
+        for(int i = 0; i < serveral; i++){
+            doRaceOneTime();
         }
     }
 
-    public int iswinner(){
-        int max=serveral;
-        for(int i=0;i<countuser();i++){
-            if(user[i].getPosition()==max) return max;
-            max--;
-        }
-        return 0;
-    }
     //우승자 출력을 위해 우승한 자동차들의 전진값 리턴
-
-    public String winner(){
-        String winner="";
-        for(int i=0;i<countuser();i++) {
-            if (user[i].getPosition() == iswinner())
-                winner += (user[i].getName()+ " ");
+    public int whoWinner() {
+        int max = 0;
+        for(int i = 0; i < countUser; i++){
+            if(users.get(i).getPosition() > max) {
+                max = users.get(i).getPosition();
+            }
         }
-        return winner;
+        return max;
+    }
+
+    public void printWinner() {
+        String winner = "";
+        for(int i = 0; i < countUser; i++) {
+            if (users.get(i).getPosition() == whoWinner())
+                winner += (users.get(i).getName()+ " ");
+        }
+        System.out.println(winner+"가 최종 우승했습니다.");
     }
 }
