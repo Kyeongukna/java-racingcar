@@ -8,10 +8,9 @@ public class Client {
         Scanner scanner = new Scanner(System.in);
         String player = scanner.next();
         System.out.println("시도할 회수는 몇회인가요?");
-        int play = scanner.nextInt();
-        CarManager user = new CarManager(player,play);
+        int several = scanner.nextInt();
+        CarManager user = new CarManager(player,several);
         user.race();
         user.printWinner();
-
     }
 }
